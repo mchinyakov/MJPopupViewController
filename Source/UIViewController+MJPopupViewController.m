@@ -180,12 +180,12 @@ static void * const keypath = (void*)&keypath;
 }
 
 -(UIView*)topView {
-    UIViewController *recentView = self;
+    UIView * view = self.view;
     
-    while (recentView.parentViewController != nil) {
-        recentView = recentView.parentViewController;
+    while (view.superview != nil) {
+        view = view.superview;
     }
-    return recentView.view;
+    return view;
 }
 
 - (void)dismissPopupViewControllerWithanimation:(id)sender
