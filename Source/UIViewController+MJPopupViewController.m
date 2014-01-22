@@ -14,6 +14,7 @@
 #define kPopupModalAnimationDuration 0.35
 #define kMJPopupViewController @"kMJPopupViewController"
 #define kMJPopupBackgroundView @"kMJPopupBackgroundView"
+#define kMJDisableCloseOnBackgroundTap @"kMJDisableCloseOnBackgroundTap"
 #define kMJSourceViewTag 23941
 #define kMJPopupViewTag 23942
 #define kMJOverlayViewTag 23945
@@ -32,6 +33,18 @@ static NSString *MJPopupViewDismissedKey = @"MJPopupViewDismissed";
 @implementation UIViewController (MJPopupViewController)
 
 static void * const keypath = (void*)&keypath;
+
+- (BOOL) mj_disableCloseOnBackgroundTap
+{
+    NSNumber * value = objc_getAssociatedObject(self, kMJDisableCloseOnBackgroundTap);
+    
+    return value != nil ? [value boolValue] : NO;
+}
+
+- (void) setMj_disableCloseOnBackgroundTap:(BOOL)mj_disableCloseOnBackgroundTap
+{
+    objc_setAssociatedObject(self, kMJDisableCloseOnBackgroundTap, @(mj_disableCloseOnBackgroundTap), OBJC_ASSOCIATION_RETAIN_NONATOMIC);
+}
 
 - (UIViewController*)mj_popupViewController {
     return objc_getAssociatedObject(self, kMJPopupViewController);
@@ -139,8 +152,12 @@ static void * const keypath = (void*)&keypath;
     popupView.alpha = 0.0f;
     [overlayView addSubview:popupView];
     [sourceView addSubview:overlayView];
-    
-    [dismissButton addTarget:self action:@selector(dismissPopupViewControllerWithanimation:) forControlEvents:UIControlEventTouchUpInside];
+    if (self.mj_disableCloseOnBackgroundTap == NO)
+    {
+        [dismissButton addTarget:self
+                          action:@selector(dismissPopupViewControllerWithanimation:)
+                forControlEvents:UIControlEventTouchUpInside];
+    }
     switch (animationType) {
         case MJPopupViewAnimationSlideBottomTop:
         case MJPopupViewAnimationSlideBottomBottom:

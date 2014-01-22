@@ -13,5 +13,6 @@
 @interface MJPopupSegue : UIStoryboardSegue
 
 @property (readwrite) MJPopupViewAnimation animation;
+@property (readwrite) BOOL disableCloseOnBackgroundTap;
 
 @end

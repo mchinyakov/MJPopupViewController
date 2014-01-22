@@ -24,8 +24,11 @@
 
 - (void)perform
 {
-    [self.sourceViewController presentPopupViewController:self.destinationViewController
-                                            animationType:self.animation];
+    UIViewController *source =  self.sourceViewController;
+    source.mj_disableCloseOnBackgroundTap = self.disableCloseOnBackgroundTap;
+
+    [source presentPopupViewController:self.destinationViewController
+                         animationType:self.animation];
 }
 
 @end
